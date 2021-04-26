@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'src/bloc/provider.dart';
-
 import './routes.dart';
-import './src/pages/error_404.dart';
 import './src/pref_user/user_pref.dart';
+
+import './theme_colors.dart';
+
+import './src/pages/error_404.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: 'login',
+        initialRoute: 'welcome',
         routes: getAplicationRoutes(),
         onGenerateRoute: (RouteSettings settings) {
           print('Ruta llamada ${settings.name}');
@@ -29,7 +31,8 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (context) => Page404());
         },
         theme: ThemeData(
-          primaryColor: Colors.deepPurple,
+          primaryColor: kPrimaryColor,
+          scaffoldBackgroundColor: Colors.white,
         ),
       ),
     );

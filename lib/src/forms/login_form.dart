@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../theme_colors.dart';
+import '../components/rounded_password_field.dart';
+import '../components/rounded_input_field.dart';
+
 import '../utils/utils.dart';
 import '../bloc/provider.dart';
 import '../providers/usuario_provider.dart';
@@ -23,40 +27,50 @@ class LoginFormState extends State<LoginForm> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          SafeArea(
-            child: Container(
-              height: 180.0,
-            ),
-          ),
+          // SafeArea(
+          //   child: Container(
+          //     height: 180.0,
+          //   ),
+          // ),
           Container(
             width: size.width * 0.85,
-            margin: EdgeInsets.symmetric(vertical: 30.0),
-            padding: EdgeInsets.symmetric(vertical: 50.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5.0),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 3.0,
-                      offset: Offset(0.0, 5.0),
-                      spreadRadius: 3.0)
-                ]),
+            margin: EdgeInsets.symmetric(vertical: 10.0),
+            //padding: EdgeInsets.symmetric(vertical: 50.0),
+            // decoration: BoxDecoration(
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius.circular(5.0),
+            //   boxShadow: <BoxShadow>[
+            //     BoxShadow(
+            //         color: Colors.black26,
+            //         blurRadius: 3.0,
+            //         offset: Offset(0.0, 5.0),
+            //         spreadRadius: 3.0)
+            //   ],
+            // ),
             child: Column(
               children: <Widget>[
-                Text(
-                  'Ingresar datos',
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                SizedBox(height: 30.0),
                 Form(
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
-                      _emailInput(bloc),
-                      SizedBox(height: 20.0),
-                      _passwordInput(bloc),
-                      SizedBox(height: 30.0),
+                      RoundedInputField(
+                        hintText: "ejemplo@correo.com",
+                        labelText: 'Correo electrónico',
+                        icon: Icons.email,
+                        onChanged: bloc.changeEmail,
+                        typeInput: TextInputType.emailAddress,
+                        bloc: bloc,
+                      ),
+                      RoundedPasswordField(
+                        labelText: "Contraseña",
+                        icon: Icons.lock,
+                        onChanged: bloc.changePassword,
+                        bloc: bloc,
+                      ),
+                      // RoundedButton(
+                      //   text: "INGRESAR",
+                      //   press: () {},
+                      // ),
                       _submitButton(bloc),
                     ],
                   ),
@@ -64,82 +78,42 @@ class LoginFormState extends State<LoginForm> {
               ],
             ),
           ),
-          Text('¿Olvido la contraseña?'),
-          TextButton(
-            child: Text('Crear cuenta'),
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, 'registro'),
-          ),
-          SizedBox(height: 100.0)
+          // Text('¿Olvido la contraseña?'),
+          // TextButton(
+          //   child: Text('Crear cuenta'),
+          //   onPressed: () =>
+          //       Navigator.pushReplacementNamed(context, 'registro'),
+          // ),
+          // SizedBox(height: 100.0)
         ],
       ),
     );
   }
 
-  Widget _emailInput(LoginBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.emailStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              icon: Icon(Icons.email, color: Colors.deepPurple),
-              hintText: 'ejemplo@correo.com',
-              labelText: 'Correo electrónico',
-              counterText: snapshot.data,
-              errorText: snapshot.error,
-            ),
-            onChanged: bloc.changeEmail,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _passwordInput(LoginBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.passwordStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: TextFormField(
-            obscureText: true,
-            decoration: InputDecoration(
-              icon: Icon(Icons.lock, color: Colors.deepPurple),
-              labelText: 'Contraseña',
-              counterText: snapshot.data,
-              errorText: snapshot.error,
-            ),
-            onChanged: bloc.changePassword,
-          ),
-        );
-      },
-    );
-  }
-
   Widget _submitButton(LoginBloc bloc) {
+    Size size = MediaQuery.of(context).size;
     return StreamBuilder(
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return ElevatedButton(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 13.0),
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          width: size.width * 0.8,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(29),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: kPrimaryColor,
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+              ),
               child: Text(
-                'Ingresar',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                "INGRESAR",
+                style: TextStyle(color: Colors.white),
               ),
+              onPressed:
+                  snapshot.hasData ? () => _onSubmit(bloc, context) : null,
             ),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              elevation: 0.0,
-              primary: Colors.deepPurple,
-            ),
-            onPressed:
-                snapshot.hasData ? () => _onSubmit(bloc, context) : null);
+          ),
+        );
       },
     );
   }

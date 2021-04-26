@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+Diseño de la aplicación tomado de [Abu Anwar](https://github.com/abuanwar072/Welcome-Login-Signup-Page-Flutter)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
